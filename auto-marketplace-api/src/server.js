@@ -1,34 +1,31 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import path from "path";
-import authRoutes from "./routes/authRoutes.js";
-import vehicleRoutes from "./routes/vehicleRoutes.js";
-import inspectionRoutes from "./routes/inspectionRoutes.js";
-import valuationRoutes from "./routes/valuationRoutes.js";
-import inventoryRoutes from "./routes/inventoryRoutes.js";
-
-dotenv.config();
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { verifyToken } = require('./middlewares/auth'); // Assuming you have auth middleware in a separate file
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
+// CORS validation
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+// Body parser middleware to handle request size limits
+app.use(bodyParser.json({ limit: '1mb' })); // Set your desired limit
 
-app.use("/", authRoutes);
-app.use("/", vehicleRoutes);
-app.use("/", inspectionRoutes);
-app.use("/", valuationRoutes);
-app.use("/", inventoryRoutes);
+// Authentication middleware for protected routes
+app.use('/protected', verifyToken);
 
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok" });
+// Example protected route
+app.get('/protected/resource', (req, res) => {
+    res.send('This is a protected resource!');
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });

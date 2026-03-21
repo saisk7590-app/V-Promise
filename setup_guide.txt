@@ -1,0 +1,39 @@
+---------------------------------------------------------
+AUTO-MARKETPLACE SETUP GUIDE
+---------------------------------------------------------
+
+1. START BACKEND (BE)
+   - Go to: auto-marketplace-api
+   - Run: npm run dev
+   - Server runs on: http://localhost:5000
+
+2. START NGROK (For Mobile Testing)
+   - Run: npx ngrok http 5000
+   - Copy the "Forwarding" URL (e.g., https://xxxx.ngrok-free.app)
+
+3. UPDATE FRONTEND CONFIG
+   - Open: auto-marketplace-app/src/services/api.js
+   - Replace the URL in `baseURL` with your copied ngrok URL.
+
+4. START FRONTEND (FE)
+   - Go to: auto-marketplace-app
+   - Run: npx expo start --tunnel
+   - Scan the QR code to open in Expo Go.
+
+5. LOGIN CREDENTIALS
+   (Password for all is: admin123)
+
+   +----------------------+--------------------+-----------+
+   | ROLE                 | EMAIL              | PASSWORD  |
+   +----------------------+--------------------+-----------+
+   | Admin                | admin@test.com     | admin123  |
+   | Sales Executive      | sales@test.com     | admin123  |
+   | Inspection Executive | inspector@test.com | admin123  |
+   | Valuation Manager    | valuation@test.com | admin123  |
+   | Inventory Manager    | inventory@test.com | admin123  |
+   +----------------------+--------------------+-----------+
+
+---------------------------------------------------------
+Note: You MUST update api.js with the new ngrok URL 
+every time you restart ngrok.
+---------------------------------------------------------

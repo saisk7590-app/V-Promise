@@ -1,0 +1,233 @@
+
+=================================================
+=================================================
+=================================================
+You are a senior React Native architect.
+
+Refactor my existing Expo React Native project into a clean, scalable, production-ready structure.
+
+---
+
+## CURRENT PROBLEM
+
+* Screens are not modular
+* No reusable components
+* No theme or constants folder
+* Styles are hardcoded
+* No proper folder structure
+
+---
+
+## GOAL
+
+Restructure the app using best practices.
+
+---
+
+## REQUIRED FOLDER STRUCTURE
+
+Create and organize like this:
+
+/src
+/screens
+/Sales
+/Inspection
+/Valuation
+/Inventory
+
+/components
+Button.js
+Input.js
+Dropdown.js
+Card.js
+CollapsibleCard.js
+
+/theme
+colors.js
+spacing.js
+typography.js
+
+/constants
+options.js
+
+/services
+api.js
+
+/utils
+helpers.js
+
+---
+
+## TASKS
+
+### 1. THEME SETUP
+
+Create:
+
+colors.js → all colors
+spacing.js → margins/paddings
+typography.js → font sizes
+
+Use them everywhere (NO hardcoded styles)
+
+---
+
+### 2. REUSABLE COMPONENTS
+
+Create:
+
+Button
+Input
+Dropdown
+Card
+CollapsibleCard
+
+Each should:
+
+* Accept props
+* Be reusable
+* Not contain business logic
+
+---
+
+### 3. SCREEN REFACTOR
+
+Update all existing screens:
+
+* Move inline styles → theme
+* Replace UI with reusable components
+* Keep screens clean (only logic + layout)
+
+---
+
+### 4. API LAYER
+
+Create:
+
+/services/api.js
+
+* Setup axios instance
+* Base URL
+* Export API functions
+
+---
+
+### 5. CONSTANTS
+
+Move all dropdown values into:
+
+/constants/options.js
+
+Example:
+
+CONDITION_OPTIONS = [
+{ label: "Excellent", value: "EXCELLENT" },
+{ label: "Good", value: "GOOD" },
+...
+]
+
+---
+
+### 6. CLEAN CODE RULES
+
+* Functional components only
+* Use hooks
+* No duplicate code
+* No inline styling
+* Keep components small and reusable
+
+---
+
+## OUTPUT
+
+Provide:
+
+1. Folder structure
+2. Theme files
+3. Reusable components
+4. Example refactored screen (one screen is enough)
+5. API setup
+
+---
+
+## IMPORTANT
+
+* Do NOT break existing functionality
+* Do NOT create unnecessary files
+* Keep it simple and scalable
+* Follow real-world production standards
+=================================================
+=================================================
+=================================================
+You are a senior React Native architect doing a strict code review.
+
+I will provide parts of my project step by step.
+
+---
+
+## YOUR ROLE
+
+* Analyze my project structure
+* Identify problems in architecture
+* Suggest improvements
+* Refactor code if needed
+
+---
+
+## RULES
+
+* Do NOT give generic advice
+* Be specific and practical
+* Think like a production-level reviewer
+* Point out mistakes clearly
+* Suggest better folder structure if needed
+
+---
+
+## STEP 1
+
+First, I will share my folder structure.
+
+After that:
+
+* Analyze structure
+* Tell what is wrong
+* Suggest improved structure
+
+---
+
+## STEP 2
+
+Then I will share one screen file.
+
+You should:
+
+* Identify bad practices
+* Refactor it using:
+
+  * components
+  * theme
+  * clean structure
+
+---
+
+## STEP 3
+
+Then I will share components or theme.
+
+You should:
+
+* Improve reusability
+* Fix inconsistencies
+
+---
+
+## IMPORTANT
+
+* This is a real production app (Auto Marketplace)
+* Focus on scalability and clean architecture
+* Avoid over-engineering
+
+---
+
+Wait for my input after each step and respond accordingly.

@@ -86,6 +86,7 @@ created_by INT NOT NULL,
 
 vehicle_type VARCHAR(100) NOT NULL,
 purchase_type VARCHAR(50),
+vehicle_name VARCHAR(100),
 
 model_year INT,
 registration_number VARCHAR(20) UNIQUE,
@@ -288,5 +289,83 @@ value VARCHAR(50)
 );
 
 -- =========================================
+-- 13.Master options created by Antigravity
+-- =========================================
+-- Table: public.master_options
+
+-- DROP TABLE IF EXISTS public.master_options;
+
+CREATE TABLE IF NOT EXISTS public.master_options
+(
+    id integer NOT NULL DEFAULT nextval('master_options_id_seq'::regclass),
+    category character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    label character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    value character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT master_options_pkey PRIMARY KEY (id),
+    CONSTRAINT master_options_value_key UNIQUE (value)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.master_options
+    OWNER to postgres;
+
+-- =========================================
+-- 14. VEHICLE STATUS HISTORY
+-- =========================================
+CREATE TABLE vehicle_status_history (
+    id SERIAL PRIMARY KEY,
+
+    vehicle_id INT NOT NULL,
+    status VARCHAR(50),
+
+    changed_by INT,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (vehicle_id)
+    REFERENCES vehicles(id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (changed_by)
+    REFERENCES users(id)
+    ON DELETE SET NULL
+);
+-- =========================================
+-- 15. VEHICLE DOCUMENTS
+-- =========================================
+CREATE TABLE vehicle_documents (
+    id SERIAL PRIMARY KEY,
+
+    vehicle_id INT NOT NULL,
+
+    document_type VARCHAR(50), -- RC, Insurance, Invoice
+    document_path TEXT,
+
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (vehicle_id)
+    REFERENCES vehicles(id)
+    ON DELETE CASCADE
+);
+
+-- =========================================
 -- END OF FILE
 -- =========================================
+ALTER TABLE vehicles ADD COLUMN vehicle_name VARCHAR(100)
+
+-- Table: public.roles
+
+-- DROP TABLE IF EXISTS public.roles;
+
+CREATE TABLE IF NOT EXISTS public.roles
+(
+    id integer NOT NULL DEFAULT nextval('roles_id_seq'::regclass),
+    role_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT roles_pkey PRIMARY KEY (id),
+    CONSTRAINT roles_role_name_key UNIQUE (role_name)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.roles
+    OWNER to postgres;

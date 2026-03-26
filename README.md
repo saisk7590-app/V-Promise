@@ -1,4 +1,4 @@
-# Auto Marketplace Internal Staff Login
+# V-Promise Internal Staff Login
 
 Minimal Express + PostgreSQL API and Expo React Native app to demo role-based login/navigation for internal staff.
 
@@ -8,13 +8,13 @@ Minimal Express + PostgreSQL API and Expo React Native app to demo role-based lo
 - Ngrok (for tunneling backend to mobile)
 - Expo CLI (`npm i -g expo-cli`) or `npx expo`
 
-## Backend (auto-marketplace-api)
+## Backend (v-promise-api)
 1. Install deps:
    ```bash
-   cd auto-marketplace-api
+   cd v-promise-api
    npm install
    ```
-2. Create `.env` in `auto-marketplace-api`:
+2. Create `.env` in `v-promise-api`:
    ```env
    PORT=5000
    DB_HOST=localhost
@@ -47,8 +47,8 @@ ngrok http 5000
 ```
 Copy the HTTPS forwarding URL; you will place it in the frontend `api.js`.
 
-## Frontend (auto-marketplace-app)
-1. Install deps (inside `auto-marketplace-app`):
+## Frontend (v-promise-app)
+1. Install deps (inside `v-promise-app`):
    ```bash
    npm install
    ```
@@ -71,15 +71,15 @@ Copy the HTTPS forwarding URL; you will place it in the frontend `api.js`.
 
 ## Project Structure
 ```
-auto-marketplace
-+-- auto-marketplace-api
+v-promise
++-- v-promise-api
 ¦   +-- src
 ¦   ¦   +-- config/db.js
 ¦   ¦   +-- controllers/authController.js
 ¦   ¦   +-- routes/authRoutes.js
 ¦   ¦   +-- server.js
 ¦   +-- package.json
-+-- auto-marketplace-app
++-- v-promise-app
 ¦   +-- src
 ¦   ¦   +-- screens
 ¦   ¦   ¦   +-- LoginScreen.js
@@ -98,3 +98,4 @@ auto-marketplace
 - Backend returns `{ success: true, role: "<role_name>" }` on valid credentials, otherwise `{ success: false, message: "Invalid credentials" }`.
 - Navigation uses role strings to route; ensure DB role names match exactly the seeded values.
 # V-Promise
+

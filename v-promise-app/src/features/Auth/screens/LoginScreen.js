@@ -2,13 +2,25 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 import api from "../../../services/api";
 import { COLORS, SPACING, TYPOGRAPHY } from "../../../theme";
+
+const ROLE_ROUTE_MAP = {
+  "Admin": "Admin",
+  "Sales Executive": "Sales",
+  "Salesperson": "Sales",
+  "Inspection Executive": "Inspection",
+  "Vehicle Inspector": "Inspection",
+  "Valuation Manager": "Valuation",
+  "Inventory Manager": "Inventory",
+};
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -20,7 +32,8 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       const response = await api.post("/login", { email, password });
-      const { success, role, message } = response.data;
+      const { success, user, message } = response.data;
+      const role = user?.role;
 
       if (!success) {
         Alert.alert("Login failed", message || "Invalid credentials");
@@ -28,25 +41,14 @@ export default function LoginScreen() {
         return;
       }
 
-      switch (role) {
-        case "Admin":
-          navigation.replace("Admin");
-          break;
-        case "Sales Executive":
-          navigation.replace("Sales");
-          break;
-        case "Inspection Executive":
-          navigation.replace("Inspection");
-          break;
-        case "Valuation Manager":
-          navigation.replace("Valuation");
-          break;
-        case "Inventory Manager":
-          navigation.replace("Inventory");
-          break;
-        default:
-          Alert.alert("Unknown role", role);
+      const targetRoute = ROLE_ROUTE_MAP[role];
+      if (!targetRoute) {
+        Alert.alert("Unknown role", role || "No role provided");
+        setLoading(false);
+        return;
       }
+
+      navigation.replace(targetRoute);
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Unable to login. Please try again.");
@@ -71,14 +73,28 @@ export default function LoginScreen() {
           style={styles.input}
         />
 
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor={COLORS.placeholder || '#94A3B8'}
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          style={styles.input}
-        />
+        <View style={styles.passwordWrapper}>
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor={COLORS.placeholder || '#94A3B8'}
+            secureTextEntry={!showPassword}
+            value={password}
+            onChangeText={setPassword}
+            style={[styles.input, styles.passwordInput]}
+          />
+          <TouchableOpacity
+            style={styles.eyeButton}
+            onPress={() => setShowPassword((prev) => !prev)}
+            accessible
+            accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+          >
+            <Ionicons
+              name={showPassword ? "eye-off" : "eye"}
+              size={22}
+              color={COLORS.textSecondary}
+            />
+          </TouchableOpacity>
+        </View>
 
         <TouchableOpacity
           style={styles.button}
@@ -120,11 +136,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
+  passwordWrapper: {
+    position: "relative",
+    justifyContent: "center",
+  },
+  passwordInput: {
+    paddingRight: SPACING.xl,
+    marginBottom: 0,
+  },
+  eyeButton: {
+    position: "absolute",
+    right: SPACING.sm,
+    padding: SPACING.xs,
+  },
   button: {
     backgroundColor: COLORS.accent,
     padding: SPACING.md,
     borderRadius: SPACING.sm,
     alignItems: "center",
+    marginTop: SPACING.md,
   },
   buttonText: {
     color: COLORS.textLight,

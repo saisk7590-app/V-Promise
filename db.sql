@@ -85,8 +85,8 @@ customer_id INT NOT NULL,
 created_by INT NOT NULL,
 
 vehicle_type VARCHAR(100) NOT NULL,
-purchase_type VARCHAR(50),
 vehicle_name VARCHAR(100),
+purchase_type VARCHAR(50),
 
 model_year INT,
 registration_number VARCHAR(20) UNIQUE,
@@ -351,8 +351,6 @@ CREATE TABLE vehicle_documents (
 -- =========================================
 -- END OF FILE
 -- =========================================
-ALTER TABLE vehicles ADD COLUMN vehicle_name VARCHAR(100)
-
 -- Table: public.roles
 
 -- DROP TABLE IF EXISTS public.roles;

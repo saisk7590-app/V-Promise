@@ -6,7 +6,7 @@ export const getVehiclesForInspection = async (_req, res) => {
   try {
     // Fetch vehicles that don't have an inspection record yet
     const query = `
-      SELECT v.id, v.registration_number, v.model_year, v.vehicle_type
+      SELECT v.id, v.registration_number, v.vehicle_name, v.model_year, v.vehicle_type
       FROM vehicles v
       LEFT JOIN vehicle_inspections vi ON v.id = vi.vehicle_id
       WHERE vi.id IS NULL

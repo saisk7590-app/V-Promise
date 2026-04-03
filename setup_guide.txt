@@ -1,24 +1,28 @@
 ---------------------------------------------------------
-AUTO-MARKETPLACE SETUP GUIDE
+V-PROMISE SETUP GUIDE
 ---------------------------------------------------------
 
 1. START BACKEND (BE)
-   - Go to: auto-marketplace-api
+   - Folder: v-promise-api
    - Run: npm run dev
    - Server runs on: http://localhost:5000
 
 2. START NGROK (For Mobile Testing)
    - Run: npx ngrok http 5000
-   - Copy the "Forwarding" URL (e.g., https://xxxx.ngrok-free.app)
+   - Copy the HTTPS "Forwarding" URL (e.g., https://glottologic-petrifiedly-luanna.ngrok-free.dev)
 
-3. UPDATE FRONTEND CONFIG
-   - Open: auto-marketplace-app/src/services/api.js
-   - Replace the URL in `baseURL` with your copied ngrok URL.
+3. UPDATE FRONTEND CONFIG (DO NOT EDIT api.js)
+   - Folder: v-promise-app
+   - Create or edit .env in this folder with exactly:
+     EXPO_PUBLIC_API_BASE_URL=<your ngrok https URL>
+   - Example:
+     EXPO_PUBLIC_API_BASE_URL=https://glottologic-petrifiedly-luanna.ngrok-free.dev
+   - Restart Expo after changing .env so the new URL is picked up.
 
 4. START FRONTEND (FE)
-   - Go to: auto-marketplace-app
+   - Folder: v-promise-app
    - Run: npx expo start --tunnel
-   - Scan the QR code to open in Expo Go.
+   - Scan the QR code (Expo Go) to open the app.
 
 5. LOGIN CREDENTIALS
    (Password for all is: admin123)
@@ -34,6 +38,64 @@ AUTO-MARKETPLACE SETUP GUIDE
    +----------------------+--------------------+-----------+
 
 ---------------------------------------------------------
-Note: You MUST update api.js with the new ngrok URL 
-every time you restart ngrok.
+Note: Every time ngrok restarts, update v-promise-app/.env with the new HTTPS URL and restart Expo. api.js already reads from that env var.
+---------------------------------------------------------
+
+
+6. END-TO-END TESTING GUIDE (REAL EXAMPLE)
+---------------------------------------------------------
+To test the full app lifecycle smoothly, use this dummy data:
+
+A. Sales Executive (sales@test.com / admin123) -> Vehicle Intake
+   - Customer Details: 
+      Name: P. SRINIVASA RAO
+      Primary Mobile: 9849123456
+      Secondary Mobile: 9701234567
+      Branch: GAJUWAKA HYUNDAI (Enter Manually if not in list)
+   - Vehicle Details:
+      Vehicle Type: 4 Wheeler
+      Vehicle Name: Hyundai i20 Sportz Petrol
+      Purchase Type: Exchange
+      Model Year: 2019
+      Registration No: AP31BK4582
+      Speedometer: 68500
+      Outlook Condition: Good
+      Engine Condition: Very Good
+      Overall Condition: Good
+      NOC Status: OK
+      Challans Pending: No (Toggle Off)
+      Exchange Value: 4,80,000
+      Final Credit Note: 4,75,000
+
+B. Inspection Executive (inspector@test.com / admin123)
+   - Find "Hyundai i20 Sportz Petrol" in the pending list
+   - Fill Inspection Data:
+      Engine Health: Good
+      Outlook: Good
+      Structural Condition: Good
+      Mechanical Condition: Good
+      Electrical Condition: Good
+      Remarks: NA
+      (Note: Overall Grade is calculated automatically based on these conditions)
+
+C. Valuation Manager (valuation@test.com / admin123)
+   - Find "Hyundai i20 Sportz Petrol" in the pending list
+   - Recommended Price (INR): 480000
+   - Valuation Reason / Remarks: Value adjusted per market conditions.
+   - Click "Submit Valuation"
+
+D. Inventory Manager / DB Admin (inventory@test.com / admin123)
+   - To manually approve via database, run this SQL query in pgAdmin4:
+
+     BEGIN;
+     -- 1. Mark the valuation as APPROVED
+     UPDATE vehicle_valuations SET status = 'APPROVED' 
+     WHERE vehicle_id = <VEHICLE_ID> AND status = 'PENDING_APPROVAL';
+     UPDATE vehicle_valuations SET status = 'APPROVED' WHERE vehicle_id = 2;
+
+
+     * Find your IDs first using: 
+       SELECT v.id as vehicle_id, vv.id as valuation_id, vv.final_price, vv.status
+       FROM vehicles v JOIN vehicle_valuations vv ON v.id = vv.vehicle_id
+       WHERE vv.status = 'PENDING_APPROVAL';
 ---------------------------------------------------------

@@ -110,8 +110,8 @@ export const createVehicleIntake = async (req, res) => {
           overallCondition,
           nocStatus,
           challansPending === "true" || challansPending === true,
-          exchangeValue ? Number(exchangeValue) : null,
-          finalCreditNoteValue ? Number(finalCreditNoteValue) : null,
+          exchangeValue ? Number(String(exchangeValue).replace(/,/g, '')) : null,
+          finalCreditNoteValue ? Number(String(finalCreditNoteValue).replace(/,/g, '')) : null,
         ]
       );
       vehicleId = vehicleResult.rows[0].id;

@@ -65,7 +65,8 @@ export default function InspectionExecutive() {
     setForm(prev => ({
       ...prev,
       vehicleId: vehicle.id,
-      registrationNumber: vehicle.registration_number
+      registrationNumber: vehicle.registration_number,
+      vehicleName: vehicle.vehicle_name
     }));
     setVehicleModalVisible(false);
   };
@@ -160,7 +161,7 @@ export default function InspectionExecutive() {
             onPress={() => setVehicleModalVisible(true)}
           >
             <Text style={styles.vehicleSelectorText}>
-              {form.registrationNumber || "Choose Vehicle"}
+              {form.vehicleName ? `${form.vehicleName} (${form.registrationNumber})` : (form.registrationNumber || "Choose Vehicle")}
             </Text>
           </TouchableOpacity>
 
@@ -245,8 +246,8 @@ export default function InspectionExecutive() {
                   style={styles.listItem}
                   onPress={() => handleVehicleSelect(v)}
                 >
-                  <Text style={styles.listText}>{v.registration_number}</Text>
-                  <Text style={styles.listSubText}>{v.vehicle_type} - {v.model_year}</Text>
+                  <Text style={styles.listText}>{v.vehicle_name || "Unknown Vehicle"}</Text>
+                  <Text style={styles.listSubText}>{v.registration_number} • {v.vehicle_type} - {v.model_year}</Text>
                 </Pressable>
               ))}
               {vehicles.length === 0 && !loading && (

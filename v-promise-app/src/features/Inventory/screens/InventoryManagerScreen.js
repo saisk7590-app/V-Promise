@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   FlatList,
   Image,
@@ -59,10 +60,11 @@ export default function InventoryManager() {
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [search, setSearch] = useState("");
 
-  const fetchInventory = async () => {
+  const fetchInventory = async (searchText = "") => {
     try {
-      const { data } = await api.get("/api/inventory");
+      const { data } = await api.get(`/api/inventory?search=${searchText}&page=1&limit=50`);
       if (data.success) {
         setInventory(data.data || []);
       }
@@ -74,13 +76,23 @@ export default function InventoryManager() {
     }
   };
 
+  // Initial load
   useEffect(() => {
     fetchInventory();
   }, []);
 
+  // Debounced search — fires 400ms after user stops typing
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      fetchInventory(search);
+    }, 400);
+
+    return () => clearTimeout(delay);
+  }, [search]);
+
   const onRefresh = () => {
     setRefreshing(true);
-    fetchInventory();
+    fetchInventory(search);
   };
 
   if (loading && !refreshing) {
@@ -95,20 +107,34 @@ export default function InventoryManager() {
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <View style={[styles.container, { alignSelf: 'center', width: '100%', maxWidth: 800 }]}>
         <Text style={styles.title}>Vehicle Inventory</Text>
-      <FlatList
-        data={inventory}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <InventoryCard item={item} />}
-        contentContainerStyle={styles.listContent}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} color={COLORS.primary} />
-        }
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No vehicles available in inventory.</Text>
-          </View>
-        }
-      />
+
+        {/* Search Bar */}
+        <TextInput
+          placeholder="Search (TS, AP, Swift, 2020...)"
+          placeholderTextColor={COLORS.textSecondary}
+          value={search}
+          onChangeText={setSearch}
+          style={styles.searchInput}
+        />
+
+        <FlatList
+          data={inventory}
+          keyExtractor={(item, index) =>
+            item.inventory_id ? item.inventory_id.toString() : index.toString()
+          }
+          renderItem={({ item }) => <InventoryCard item={item} />}
+          contentContainerStyle={styles.listContent}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} color={COLORS.primary} />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
+                {search ? `No results for "${search}".` : "No vehicles available in inventory."}
+              </Text>
+            </View>
+          }
+        />
       </View>
     </SafeAreaView>
   );
@@ -125,6 +151,17 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     padding: SPACING.lg,
     paddingBottom: SPACING.md,
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 10,
+    padding: 12,
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+    backgroundColor: COLORS.surface || "#fff",
+    fontSize: TYPOGRAPHY.body,
+    color: COLORS.textPrimary,
   },
   listContent: {
     paddingHorizontal: SPACING.lg,

@@ -1,24 +1,63 @@
 import pool from "../config/db.js";
 
-export const getInventory = async (_req, res) => {
+export const getInventory = async (req, res) => {
+  const { search, page = 1, limit = 50 } = req.query;
+  const offset = (page - 1) * limit;
+
   try {
-    const query = `
-      SELECT 
-        v.registration_number,
+    // Auto-sync: Insert any missing APPROVED valuations into inventory automatically
+    await pool.query(`
+      INSERT INTO vehicle_inventory (vehicle_id, valuation_id, listing_price, status, is_active)
+      SELECT vv.vehicle_id, vv.id, vv.final_price, 'AVAILABLE', true
+      FROM vehicle_valuations vv
+      LEFT JOIN vehicle_inventory vi ON vi.valuation_id = vv.id
+      WHERE vv.status = 'APPROVED' AND vi.id IS NULL
+    `);
+
+    // Ensure main vehicle status reflects inventory
+    await pool.query(`
+      UPDATE vehicles v
+      SET vehicle_status = 'IN_INVENTORY'
+      FROM vehicle_inventory vi
+      WHERE v.id = vi.vehicle_id AND v.vehicle_status != 'IN_INVENTORY'
+    `);
+
+    const { rows } = await pool.query(
+      `SELECT
+        vi.id AS inventory_id,
         v.vehicle_name,
         v.vehicle_type,
+        v.registration_number,
         v.model_year,
         v.speedometer_reading,
         v.overall_condition,
-        vi.listing_price as price,
-        (SELECT image_path FROM inspection_images WHERE inspection_id = vv.inspection_id LIMIT 1) as thumbnail
+        vi.listing_price AS price,
+        (
+          SELECT image_path
+          FROM vehicle_images
+          WHERE vehicle_id = v.id
+          ORDER BY image_order ASC
+          LIMIT 1
+        ) AS thumbnail
+
       FROM vehicle_inventory vi
       JOIN vehicles v ON vi.vehicle_id = v.id
-      JOIN vehicle_valuations vv ON vi.valuation_id = vv.id
+
       WHERE vi.status = 'AVAILABLE' AND vi.is_active = true
+        AND (
+          $1::text IS NULL OR
+          v.vehicle_name ILIKE '%' || $1 || '%' OR
+          v.vehicle_type ILIKE '%' || $1 || '%' OR
+          v.registration_number ILIKE '%' || $1 || '%' OR
+          CAST(v.model_year AS TEXT) ILIKE '%' || $1 || '%' OR
+          CAST(vi.listing_price AS TEXT) ILIKE '%' || $1 || '%'
+        )
+
       ORDER BY vi.created_at DESC
-    `;
-    const { rows } = await pool.query(query);
+      LIMIT $2 OFFSET $3`,
+      [search || null, limit, offset]
+    );
+
     return res.json({ success: true, data: rows });
   } catch (error) {
     console.error("Fetch inventory error:", error);

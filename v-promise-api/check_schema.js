@@ -5,9 +5,9 @@ async function checkSchema() {
     const res = await pool.query(`
       SELECT column_name, data_type 
       FROM information_schema.columns 
-      WHERE table_name = 'users'
+      WHERE table_name = 'vehicles'
     `);
-    console.log("Users table columns:", res.rows);
+    console.log("Vehicles table columns:", res.rows);
     await pool.end();
   } catch (err) {
     console.error("Error:", err.message);

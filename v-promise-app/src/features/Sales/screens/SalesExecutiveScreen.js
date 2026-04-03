@@ -440,7 +440,7 @@ export default function SalesExecutive() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background, padding: SPACING.md },
   title: { fontSize: TYPOGRAPHY.title, fontWeight: "bold", marginBottom: SPACING.lg, color: COLORS.textPrimary },
-  row: { flexDirection: "row", justifyContent: "space-between" },
+  row: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" },
   label: { marginBottom: SPACING.xs, fontWeight: "500", color: COLORS.textPrimary, fontSize: TYPOGRAPHY.small },
   dropdownButton: {
     borderWidth: 1,

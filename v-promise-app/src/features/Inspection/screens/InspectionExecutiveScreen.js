@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, Camera } from "expo-camera";
+import { Header } from "../../../components/Header";
 import api from "../../../services/api";
 import { useMasterData } from "../../../hooks/useMasterData";
 import { COLORS } from "../../../theme/colors";
@@ -150,9 +151,9 @@ export default function InspectionExecutive() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+      <Header title="Vehicle Inspection" />
       <View style={[styles.container, { alignSelf: 'center', width: '100%', maxWidth: 800 }]}>
         <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>Vehicle Inspection</Text>
 
         <Card>
           <Text style={styles.label}>Select Pending Vehicle</Text>

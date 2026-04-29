@@ -6,8 +6,12 @@ import { TYPOGRAPHY } from '../theme/typography';
 import { Card } from './Card';
 
 if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
+  try {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  } catch (e) {
+    // Silently handle: setLayoutAnimationEnabledExperimental is a no-op in New Architecture
   }
 }
 

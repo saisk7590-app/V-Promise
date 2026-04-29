@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, Camera } from "expo-camera";
+import { Header } from "../../../components/Header";
 import api from "../../../services/api";
 import { useMasterData } from "../../../hooks/useMasterData";
 import { COLORS } from "../../../theme/colors";
@@ -183,9 +184,9 @@ export default function SalesExecutive() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+      <Header title="Vehicle Intake" />
       <View style={[styles.container, { alignSelf: 'center', width: '100%', maxWidth: 800 }]}>
         <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>Vehicle Intake</Text>
 
         <CollapsibleCard
           title="1. Customer Details"

@@ -8,6 +8,8 @@ import inspectionRoutes from "./routes/inspectionRoutes.js";
 import valuationRoutes from "./routes/valuationRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 import masterDataRoutes from "./routes/masterDataRoutes.js";
+import adminUserRoutes from "./routes/admin/user.routes.js";
+import adminBranchRoutes from "./routes/admin/branch.routes.js";
 
 dotenv.config();
 
@@ -26,6 +28,8 @@ app.use("/", inspectionRoutes);
 app.use("/", valuationRoutes);
 app.use("/", inventoryRoutes);
 app.use("/", masterDataRoutes);
+app.use("/admin/users", adminUserRoutes);
+app.use("/admin/branches", adminBranchRoutes);
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });

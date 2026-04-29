@@ -15,6 +15,7 @@ import {
   Platform
 } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Header } from "../../../components/Header";
 import api from "../../../services/api";
 import { COLORS, SPACING, TYPOGRAPHY } from "../../../theme";
 
@@ -129,6 +130,7 @@ export default function ValuationManager() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+      <Header title="Vehicle Valuation" />
       <KeyboardAvoidingView 
         style={{ flex: 1 }} 
         behavior={Platform.OS === "ios" ? "padding" : "height"}

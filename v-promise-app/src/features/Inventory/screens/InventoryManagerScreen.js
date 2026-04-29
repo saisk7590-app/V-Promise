@@ -10,6 +10,7 @@ import {
   RefreshControl
 } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Header } from "../../../components/Header";
 import api from "../../../services/api";
 import { COLORS } from "../../../theme/colors";
 import { SPACING } from "../../../theme/spacing";
@@ -105,9 +106,8 @@ export default function InventoryManager() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+      <Header title="Vehicle Inventory" />
       <View style={[styles.container, { alignSelf: 'center', width: '100%', maxWidth: 800 }]}>
-        <Text style={styles.title}>Vehicle Inventory</Text>
-
         {/* Search Bar */}
         <TextInput
           placeholder="Search (TS, AP, Swift, 2020...)"
